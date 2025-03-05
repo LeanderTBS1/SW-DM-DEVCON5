@@ -98,7 +98,16 @@ class CSVDownloader:
 
 if __name__ == "__main__":
     path = os.path.dirname(os.path.abspath(__file__))
-    start_date = "2022-01-01"
-    end_date = "2022-12-31"
-    downloader = CSVDownloader(path, start_date, end_date)
-    downloader.main()
+    start_date = input("Geben Sie das Startdatum im folgenden Format ein: (YYYY-MM-DD) ")
+    end_date = input("Geben Sie das Enddatum im folgenden Format ein: (YYYY-MM-DD) ")
+    valid_date = True
+    try:
+        datetime.datetime.strptime(start_date, '%Y-%m-%d')
+        datetime.datetime.strptime(end_date, '%Y-%m-%d')
+    except ValueError:
+        print("Ungültiges Datumsformat. Bitte geben Sie das Datum im Format (YYYY-MM-DD) ein.")
+        valid_date = False
+        exit(1)
+    if valid_date:
+        downloader = CSVDownloader(path, start_date, end_date)
+        downloader.main()
