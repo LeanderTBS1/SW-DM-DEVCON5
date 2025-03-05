@@ -1,5 +1,4 @@
-import sqlite3
-import csv
+import sqlite3, csv ,os
 from pathlib import Path
 
 class SQLiteHandler:
@@ -166,8 +165,9 @@ class DataInserter:
 
 # Example usage
 if __name__ == "__main__":
-    db_path = r'C:\code\Private Repos\SW-DM-DEVCON5\CSVFiles\data.db'
-    csv_path = Path(r'C:\code\Private Repos\SW-DM-DEVCON5\CSVFiles')
+    path = os.path.dirname(os.path.abspath(__file__))
+    db_path = os.path.join(path, "data.db")
+    csv_path = Path(path) / "CSVFiles"
 
     data_inserter = DataInserter(db_path, csv_path)
     data_inserter.insert_data_from_csv()
