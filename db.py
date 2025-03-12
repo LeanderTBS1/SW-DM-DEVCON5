@@ -64,27 +64,26 @@ class SQLiteHandler:
             INSERT OR IGNORE INTO sensor (sensor_id, sensor_type, location_id)
             VALUES (?, ?, ?)
         """, (sensor_id, sensor_type_name, location_id))
-        self.conn.commit()
 
     def insert_location(self, location_id, lat, lon):
       self.cursor.execute("""
           INSERT OR IGNORE INTO location (location_id, lat, lon)
           VALUES (?, ?, ?)
       """, (location_id, lat, lon))
-      self.conn.commit()
 
     def insert_sds_data(self, sds_data):
         self.cursor.executemany("""
         INSERT INTO sds_data (sensor_id, timestamp, p1, dur_p1, ratio_p1, p2, dur_p2, ratio_p2) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?);
         """, sds_data)
-        self.conn.commit()
 
     def insert_dht_data(self, dht_data):
         self.cursor.executemany("""
         INSERT INTO dht_data (sensor_id, timestamp, temperature, humidity)
         VALUES (?, ?, ?, ?)
         """, dht_data)
+
+    def commit(self):
         self.conn.commit()
 
     def close(self):
@@ -156,7 +155,7 @@ class DataInserter:
 
       self.db_handler.insert_sds_data(sds_data)
       self.db_handler.insert_dht_data(dht_data)
-
+      self.db_handler.commit()
       self.db_handler.close()
 
       sds_file.close()
