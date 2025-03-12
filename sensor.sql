@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS sensor (
     sensor_id INTEGER PRIMARY KEY,
-    sensor_type TEXT UNIQUE,
+    sensor_type TEXT,
     location_id INTEGER,
     FOREIGN KEY (location_id) REFERENCES location(location_id)
 );
