@@ -20,7 +20,7 @@ class QueriesHandler:
         return data.fetchone()
     
     def get_min(self,date):
-            data = self.cursor.execute("""
+        data = self.cursor.execute("""
             SELECT 
             MIN(temperature) AS min_temperature
             FROM dht_data
