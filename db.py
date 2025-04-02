@@ -114,7 +114,6 @@ class DataInserter:
           location = row['location'] if row['location'] else None
           lat = float(row['lat']) if row['lat'] else None
           lon = float(row['lon']) if row['lon'] else None
-          sensor_type_id = sensor_id
           sensor_type_name = row['sensor_type'] if row['sensor_type'] else None
 
           if sensor_id is not None and sensor_type_name:
@@ -138,7 +137,6 @@ class DataInserter:
           sensor_id = int(row['sensor_id']) if row['sensor_id'] else None
           lat = float(row['lat']) if row['lat'] else None
           lon = float(row['lon']) if row['lon'] else None
-          sensor_type_id = sensor_id
           sensor_type_name = row['sensor_type'] if row['sensor_type'] else None
 
           if sensor_id is not None and sensor_type_name:
