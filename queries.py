@@ -10,30 +10,28 @@ class QueriesHandler:
         self.conn = sqlite3.connect(self.db_path)
         self.cursor = self.conn.cursor()
 
-    def get_avg(self):
+    def get_avg(self, date):
         data = self.cursor.execute("""
             SELECT 
-                AVG(temperature) AS avg_temperature
+            AVG(temperature) AS avg_temperature
             FROM dht_data
-            WHERE DATE(timestamp) = '2022-03-14';
-        """)
+            WHERE DATE(timestamp) = ?;
+        """, (date,))
         return data.fetchone()
     
-    def get_min(self):
+    def get_min(self,date):
             data = self.cursor.execute("""
             SELECT 
             MIN(temperature) AS min_temperature
             FROM dht_data
-        """)
-            return data.fetchone()
+            WHERE DATE(timestamp) = ?;                           
+        """ , (date,))
+        return data.fetchone()
 
 if __name__ == "__main__":
     path = os.path.dirname(os.path.abspath(__file__))
     db_path = os.path.join(path, "data.db")
 
     db = QueriesHandler(db_path)
-    print(db.get_avg())
-    """MAX(temperature) AS max_temperature,
-            MIN(temperature) AS min_temperature,"""
-    
-    print(db.get_min())
+    print(db.get_avg('2022-03-14'))
+    print(db.get_min('2022-03-14'))
