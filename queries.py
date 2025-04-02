@@ -18,6 +18,14 @@ class QueriesHandler:
             WHERE DATE(timestamp) = '2022-03-14';
         """)
         return data.fetchone()
+    
+    def get_min(self):
+            data = self.cursor.execute("""
+            SELECT 
+            MIN(temperature) AS min_temperature
+            FROM dht_data
+        """)
+            return data.fetchone()
 
 if __name__ == "__main__":
     path = os.path.dirname(os.path.abspath(__file__))
@@ -27,3 +35,5 @@ if __name__ == "__main__":
     print(db.get_avg())
     """MAX(temperature) AS max_temperature,
             MIN(temperature) AS min_temperature,"""
+    
+    print(db.get_min())
