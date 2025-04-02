@@ -28,6 +28,13 @@ class QueriesHandler:
         """ , (date,))
         return data.fetchone()
 
+    def get_max(self):
+         data = self.cursor.execute("""
+            SELECT
+                MAX(temperature) AS max_temperature
+            FROM dht_data
+            WHERE DATE(timestamp) = '2022-03-14';                       
+        """)
 if __name__ == "__main__":
     path = os.path.dirname(os.path.abspath(__file__))
     db_path = os.path.join(path, "data.db")
