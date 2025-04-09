@@ -1,66 +1,61 @@
 import sqlite3
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 from datetime import datetime
 
-class FeinstaubGrafik:
+class PlotGraph:
     def __init__(self, db_path):
         self.db_path = db_path
 
-    def get_feinstaubdaten(self, datum):
-        """Abfrage der Feinstaubdaten für das angegebene Datum."""
-        # Verbindet sich mit der SQLite-Datenbank
+    def get_data(self, datum):
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        # Format der Datumseingabe: 'YYYY-MM-DD'
         query = """
-        SELECT timestamp, p1, p2
-        FROM sds_data
-        WHERE timestamp LIKE ?
-        ORDER BY timestamp;
+            SELECT timestamp, p1, p2
+            FROM sds_data
+            WHERE timestamp LIKE ?
+            ORDER BY timestamp;
         """
-        
-        # Sucht nach Feinstaubdaten für das angegebene Datum
+
         cursor.execute(query, (datum + '%',))
         rows = cursor.fetchall()
-        
+
         conn.close()
-        
+
         return rows
 
-    def erstelle_grafik(self, datum):
-        """Erstellt eine Grafik der Feinstaubwerte des angegebenen Datums."""
-        daten = self.get_feinstaubdaten(datum)
+    def create_graphic(self, datum):
+        data = self.get_data(datum)
 
-        if not daten:
+        if not data:
             print(f"Keine Daten für das Datum {datum} gefunden.")
             return
-        
-        # Extrahiere Zeitstempel, P1- und P2-Werte
-        timestamps = [datetime.strptime(row[0], "%Y-%m-%dT%H:%M:%S") for row in daten]  # Format angepasst
-        p1_values = [row[1] for row in daten]
-        p2_values = [row[2] for row in daten]
 
-        # Erstellen der Grafik
+        timestamps = [datetime.strptime(row[0], "%Y-%m-%dT%H:%M:%S") for row in data]
+        p1_values = [row[1] for row in data]
+        p2_values = [row[2] for row in data]
+
         plt.figure(figsize=(10, 6))
         plt.plot(timestamps, p1_values, label='P1 Feinstaubwerte', color='blue')
         plt.plot(timestamps, p2_values, label='P2 Feinstaubwerte', color='red')
 
-        # Formatierung der Grafik
         plt.title(f"Feinstaubwerte für {datum}")
-        plt.xlabel('Zeit')
+        plt.xlabel('Stunde')
         plt.ylabel('Feinstaubwert (µg/m³)')
         plt.xticks(rotation=45)
+
+        ax = plt.gca()
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%H'))
+
         plt.legend()
         plt.grid(True)
         plt.tight_layout()
         plt.show()
 
-# Beispielhafte Verwendung:
 if __name__ == "__main__":
-    db_path = "data.db"  # Der Pfad zur SQLite-Datenbank
-    grafik = FeinstaubGrafik(db_path)
+    db_path = "data.db"
+    plot = PlotGraph(db_path)
 
-    # Datum vom Benutzer eingeben
-    datum = input("Geben Sie ein Datum im Format YYYY-MM-DD ein: ")
-    grafik.erstelle_grafik(datum)
+    date = input("Geben Sie ein Datum im Format YYYY-MM-DD ein: ")
+    plot.create_graphic(date)
