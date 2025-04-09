@@ -28,7 +28,7 @@ class QueriesHandler:
         """ , (date,))
         return data.fetchone()
 
-    def get_max(self):
+    def get_max(self, date):
         data = self.cursor.execute("""
             SELECT
             MAX(temperature) AS max_temperature
@@ -42,5 +42,5 @@ if __name__ == "__main__":
 
     db = QueriesHandler(db_path)
     print(db.get_avg('2022-03-14'))
-    print(db.get_max)('2022-03-14')
+    print(db.get_max('2022-03-14'))
     print(db.get_min('2022-03-14'))
