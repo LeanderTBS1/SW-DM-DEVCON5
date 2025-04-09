@@ -29,9 +29,9 @@ class QueriesHandler:
         return data.fetchone()
 
     def get_max(self):
-         data = self.cursor.execute("""
+        data = self.cursor.execute("""
             SELECT
-                MAX(temperature) AS max_temperature
+            MAX(temperature) AS max_temperature
             FROM dht_data
            WHERE DATE(timestamp) = ?;                           
         """ , (date,))
