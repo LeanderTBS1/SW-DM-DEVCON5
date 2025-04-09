@@ -41,6 +41,19 @@ if __name__ == "__main__":
     db_path = os.path.join(path, "data.db")
 
     db = QueriesHandler(db_path)
-    print(db.get_avg('2022-03-14'))
-    print(db.get_max('2022-03-14'))
-    print(db.get_min('2022-03-14'))
+
+    date = input("Gib ein Datum im Format JJJJ-MM-TT ein: ")
+    try:
+        avg = db.get_avg(date)
+        max_val = db.get_max(date)
+        min_val = db.get_min(date)
+
+        print(f"Durchschnitt: {avg}")
+        print(f"Maximum: {max_val}")
+        print(f"Minimum: {min_val}")
+    except ValueError:
+        print("Fehlerhafte Eingabe: Bitte überprüfe das Datumsformat.")
+    except KeyError:
+        print("Keine Daten für das eingegebene Datum gefunden.")
+    except Exception as e:
+        print(f"Ein unbekannter Fehler ist aufgetreten: {e}")
