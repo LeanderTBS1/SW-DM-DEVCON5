@@ -10,7 +10,7 @@ class QueriesHandler:
         self.conn = sqlite3.connect(self.db_path)
         self.cursor = self.conn.cursor()
 
-    def get_avg(self, date):
+    def get_avg_temp(self, date):
         data = self.cursor.execute("""
             SELECT 
             AVG(temperature) AS avg_temperature
@@ -19,7 +19,7 @@ class QueriesHandler:
         """, (date,))
         return data.fetchone()
     
-    def get_min(self,date):
+    def get_min_temp(self,date):
         data = self.cursor.execute("""
             SELECT 
             MIN(temperature) AS min_temperature
@@ -28,7 +28,7 @@ class QueriesHandler:
         """ , (date,))
         return data.fetchone()
 
-    def get_max(self, date):
+    def get_max_temp(self, date):
         data = self.cursor.execute("""
             SELECT
             MAX(temperature) AS max_temperature
@@ -36,6 +36,7 @@ class QueriesHandler:
            WHERE DATE(timestamp) = ?;                           
         """ , (date,))
         return data.fetchone()
+
 if __name__ == "__main__":
     path = os.path.dirname(os.path.abspath(__file__))
     db_path = os.path.join(path, "data.db")
@@ -44,9 +45,9 @@ if __name__ == "__main__":
 
     date = input("Gib ein Datum im Format JJJJ-MM-TT ein: ")
     try:
-        avg = db.get_avg(date)
-        max_val = db.get_max(date)
-        min_val = db.get_min(date)
+        avg = db.get_avg_temp(date)
+        max_val = db.get_max_temp(date)
+        min_val = db.get_min_temp(date)
 
         print(f"Durchschnitt: {avg}")
         print(f"Maximum: {max_val}")
