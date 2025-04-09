@@ -33,8 +33,9 @@ class QueriesHandler:
             SELECT
                 MAX(temperature) AS max_temperature
             FROM dht_data
-            WHERE DATE(timestamp) = '2022-03-14';                       
-        """)
+           WHERE DATE(timestamp) = ?;                           
+        """ , (date,))
+        return data.fetchone()
 if __name__ == "__main__":
     path = os.path.dirname(os.path.abspath(__file__))
     db_path = os.path.join(path, "data.db")
