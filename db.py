@@ -159,8 +159,6 @@ class DataInserter:
       sds_file.close()
       dht_file.close()
 
-
-# Example usage
 if __name__ == "__main__":
     path = os.path.dirname(os.path.abspath(__file__))
     db_path = os.path.join(path, "data.db")

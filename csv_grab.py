@@ -15,22 +15,22 @@ class CSVDownloader:
         self.path.mkdir(parents=True, exist_ok=True)
 
     def main(self):
-        urlLists = self.get_urls()
-        reader_lists = self.read_csv(urlLists)
+        url_lists = self.get_urls()
+        reader_lists = self.read_csv(url_lists)
         self.write_csv(reader_lists)
-        print("Die CSV-Daten befinden sich nun im Ordner: ", self.path)
+        print("Die CSV-Daten befinden sich nun im Ordner:", self.path)
 
     def get_urls(self):
         add_a_day = datetime.timedelta(days=1)
         date = self.start_date
-        sds_list = []
-        dht_list = []
+        sds_list, dht_list = [], []
+
         while date <= self.end_date:
             base_path = f"{date.strftime('%Y-%m-%d')}/"
-            if 2015 <= date.year <= 2022:
-                base_path = f"{date.strftime('%Y')}/{base_path}"
-                sds_suffix = "_sds011_sensor_321.csv.gz" if date.year <= 2022 else "_sds011_sensor_3659.csv"
-                dht_suffix = "_dht22_sensor_322.csv.gz" if date.year <= 2022 else "_dht22_sensor_3660.csv"
+            if 2015 <= date.year <= 2024:
+                base_path = f"{date.year}/{base_path}"
+                sds_suffix = "_sds011_sensor_321.csv.gz"
+                dht_suffix = "_dht22_sensor_322.csv.gz"
             else:
                 sds_suffix = "_sds011_sensor_3659.csv"
                 dht_suffix = "_dht22_sensor_3660.csv"
@@ -41,73 +41,57 @@ class CSVDownloader:
 
         return {"sds": sds_list, "dht": dht_list}
 
+    def _load_csv_from_url(self, url):
+        try:
+            response = urllib.request.urlopen(url)
+            if url.endswith(".gz"):
+                with gzip.GzipFile(fileobj=response) as gz:
+                    csv_rows = [line.decode("utf-8") for line in gz.readlines()]
+            else:
+                csv_rows = [line.decode("utf-8") for line in response.readlines()]
+            return list(csv.DictReader(csv_rows, delimiter=";"))
+        except (urllib.error.HTTPError, urllib.error.URLError) as e:
+            print(f"Fehler beim Laden von {url}: {e}")
+            return None
+
     def read_csv(self, urls):
-      sds_readers = []
-      dht_readers = []
-      
-      for sds_url in urls['sds']:
-          try:
-              url_response = urllib.request.urlopen(sds_url)
-              if sds_url.endswith('.gz'):
-                  with gzip.GzipFile(fileobj=url_response) as gz:
-                      csv_rows = [line.decode('utf-8') for line in gz.readlines()]
-              else:
-                  csv_rows = [line.decode('utf-8') for line in url_response.readlines()]
-              reader = csv.DictReader(csv_rows, delimiter=";")
-              sds_readers.append(list(reader))
-          except (urllib.error.HTTPError, urllib.error.URLError):
-              print("Die Daten von", sds_url, "konnten nicht gefunden werden")
-
-      for dht_url in urls['dht']:
-          try:
-              url_response = urllib.request.urlopen(dht_url)
-              if dht_url.endswith('.gz'):
-                  with gzip.GzipFile(fileobj=url_response) as gz:
-                      csv_rows = [line.decode('utf-8') for line in gz.readlines()]
-              else:
-                  csv_rows = [line.decode('utf-8') for line in url_response.readlines()]
-              reader = csv.DictReader(csv_rows, delimiter=";")
-              dht_readers.append(list(reader))
-          except (urllib.error.HTTPError, urllib.error.URLError):
-              print("Die Daten von", dht_url, "konnten nicht gefunden werden")
-
-      return {"sds": sds_readers, "dht": dht_readers}
-
+        sds_readers = [res for url in urls.get("sds", []) if (res := self._load_csv_from_url(url)) is not None]
+        dht_readers = [res for url in urls.get("dht", []) if (res := self._load_csv_from_url(url)) is not None]
+        return {"sds": sds_readers, "dht": dht_readers}
 
     def write_csv(self, readers):
-      sds_file_path = self.path / "Daten-SDS.csv"
-      dht_file_path = self.path / "Daten-DHT.csv"
+        sds_file = self.path / "Daten-SDS.csv"
+        dht_file = self.path / "Daten-DHT.csv"
 
-      with open(sds_file_path, "w", newline='', encoding="utf-8") as sds_file, \
-              open(dht_file_path, "w", newline='', encoding="utf-8") as dht_file:
+        with open(sds_file, "w", newline='', encoding="utf-8") as sds_f, \
+             open(dht_file, "w", newline='', encoding="utf-8") as dht_f:
 
-          sds_writer = csv.DictWriter(sds_file, fieldnames=["sensor_id", "sensor_type", "location", "lat", "lon",
-                                                            "timestamp", "P1", "durP1", "ratioP1", "P2", "durP2",
-                                                            "ratioP2"])
-          sds_writer.writeheader()
-          for sds_reader in readers['sds']:
-              sds_writer.writerows(sds_reader)
+            sds_writer = csv.DictWriter(sds_f, fieldnames=["sensor_id", "sensor_type", "location", "lat", "lon",
+                                                            "timestamp", "P1", "durP1", "ratioP1", "P2", "durP2", "ratioP2"])
+            sds_writer.writeheader()
+            for sds_reader in readers["sds"]:
+                sds_writer.writerows(sds_reader)
 
-          dht_writer = csv.DictWriter(dht_file, fieldnames=["sensor_id", "sensor_type", "location", "lat", "lon",
+            dht_writer = csv.DictWriter(dht_f, fieldnames=["sensor_id", "sensor_type", "location", "lat", "lon",
                                                             "timestamp", "temperature", "humidity"])
-          dht_writer.writeheader()
-          for dht_reader in readers['dht']:
-              dht_writer.writerows(dht_reader)
+            dht_writer.writeheader()
+            for dht_reader in readers["dht"]:
+                dht_writer.writerows(dht_reader)
 
-      print(f"Dateien gespeichert: {sds_file_path}, {dht_file_path}")
+        print(f"Dateien gespeichert: {sds_file}, {dht_file}")
+
 
 if __name__ == "__main__":
     path = os.path.dirname(os.path.abspath(__file__))
-    start_date = input("Geben Sie das Startdatum im folgenden Format ein: (YYYY-MM-DD) ")
-    end_date = input("Geben Sie das Enddatum im folgenden Format ein: (YYYY-MM-DD) ")
-    valid_date = True
+    start_date = input("Geben Sie das Startdatum ein (YYYY-MM-DD): ")
+    end_date = input("Geben Sie das Enddatum ein (YYYY-MM-DD): ")
+
     try:
         datetime.datetime.strptime(start_date, '%Y-%m-%d')
         datetime.datetime.strptime(end_date, '%Y-%m-%d')
     except ValueError:
-        print("Ungültiges Datumsformat. Bitte geben Sie das Datum im Format (YYYY-MM-DD) ein.")
-        valid_date = False
+        print("Ungültiges Datumsformat. Bitte (YYYY-MM-DD) verwenden.")
         exit(1)
-    if valid_date:
-        downloader = CSVDownloader(path, start_date, end_date)
-        downloader.main()
+
+    downloader = CSVDownloader(path, start_date, end_date)
+    downloader.main()
