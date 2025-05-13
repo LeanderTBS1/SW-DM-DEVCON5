@@ -144,15 +144,15 @@ if __name__ == "__main__":
         min_p2  = db.get_min_dustp2(date)
 
 
-        print(f"Durchschnittstemperatur: {avg_temp[0]} C°")
+        print(f"Durchschnittstemperatur: {round(avg_temp[0], 2)} C°")
         print(f"Maximale Temperatur: {max_temp[0]} C°")
         print(f"Minimale Temperatur: {min_temp[0]} C°")
 
-        print(f"Durchschnitliche Luftfeuchtigkeit in Prozent: {avg_hum[0]} %")
+        print(f"Durchschnitliche Luftfeuchtigkeit in Prozent: {round(avg_hum[0], 2)} %")
         print(f"Maximale Luftfeuchtigkeit in Prozent: {max_hum[0]} %")
         print(f"Minimale Luftfeuchtigkeit in Prozent: {min_hum[0]} %")
 
-        print(f"Durchschnitliche Feinstaubwerte P1: {avg_p1[0]} mg/m³ P2: {avg_p2[0]} mg/m³")
+        print(f"Durchschnitliche Feinstaubwerte P1: {round(avg_p1[0], 2)} mg/m³ P2: {round(avg_p2[0], 2)} mg/m³")
         print(f"Maximale Feinstaubwerte P1: {max_p1[0]} mg/m³ P2: {max_p2[0]} mg/m³")
         print(f"Minimale Feinstaubwerte P1: {min_p1[0]} mg/m³ P2: {min_p2[0]} mg/m³")
 
