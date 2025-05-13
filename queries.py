@@ -10,7 +10,7 @@ class QueriesHandler:
         self.conn = sqlite3.connect(self.db_path)
         self.cursor = self.conn.cursor()
 
-    def get_avg_temp(self, date):
+    def get_avg_temp(self, date) -> tuple:
         data = self.cursor.execute("""
             SELECT 
             AVG(temperature) AS avg_temperature
@@ -19,7 +19,7 @@ class QueriesHandler:
         """, (date,))
         return data.fetchone()
     
-    def get_min_temp(self,date):
+    def get_min_temp(self,date) -> tuple:
         data = self.cursor.execute("""
             SELECT 
             MIN(temperature) AS min_temperature
@@ -28,7 +28,7 @@ class QueriesHandler:
         """ , (date,))
         return data.fetchone()
 
-    def get_max_temp(self, date):
+    def get_max_temp(self, date) -> tuple:
         data = self.cursor.execute("""
             SELECT
             MAX(temperature) AS max_temperature
@@ -37,7 +37,7 @@ class QueriesHandler:
         """ , (date,))
         return data.fetchone()
     
-    def get_max_hum(self, date):
+    def get_max_hum(self, date) -> tuple:
         data = self.cursor.execute("""
             SELECT 
             MAX(humidity) AS max_humidity
@@ -46,7 +46,7 @@ class QueriesHandler:
         """, (date,))
         return data.fetchone()
     
-    def get_min_hum(self, date):
+    def get_min_hum(self, date) -> tuple:
         data = self.cursor.execute("""
             SELECT 
             MIN(humidity) AS min_humidity
@@ -55,7 +55,7 @@ class QueriesHandler:
         """, (date,))
         return data.fetchone()
     
-    def get_avg_hum(self, date):
+    def get_avg_hum(self, date) -> tuple:
         data = self.cursor.execute("""
             SELECT 
             AVG(humidity) AS avg_humidity
@@ -64,7 +64,7 @@ class QueriesHandler:
         """, (date,))
         return data.fetchone()
     
-    def get_max_dustp1(self, date):
+    def get_max_dustp1(self, date) -> tuple:
         data = self.cursor.execute("""
             SELECT 
             MAX(p1) AS max_p1
@@ -73,7 +73,7 @@ class QueriesHandler:
         """, (date,))
         return data.fetchone()
     
-    def get_min_dustp1(self, date):
+    def get_min_dustp1(self, date) -> tuple:
         data = self.cursor.execute("""
             SELECT 
             MIN(p1) AS max_p1
@@ -82,7 +82,7 @@ class QueriesHandler:
         """, (date,))
         return data.fetchone()
     
-    def get_avg_dustp1(self, date):
+    def get_avg_dustp1(self, date) -> tuple:
         data = self.cursor.execute("""
             SELECT 
             AVG(p1) AS avg_p1
@@ -92,7 +92,7 @@ class QueriesHandler:
         return data.fetchone()
     
 
-    def get_max_dustp2(self, date):
+    def get_max_dustp2(self, date) -> tuple:
         data = self.cursor.execute("""
             SELECT 
             MAX(p2) AS max_p2
@@ -101,7 +101,7 @@ class QueriesHandler:
         """, (date,))
         return data.fetchone()
     
-    def get_min_dustp2(self, date):
+    def get_min_dustp2(self, date) -> tuple:
         data = self.cursor.execute("""
             SELECT 
             MIN(p2) AS max_p2
@@ -110,7 +110,7 @@ class QueriesHandler:
         """, (date,))
         return data.fetchone()
     
-    def get_avg_dustp2(self, date):
+    def get_avg_dustp2(self, date) -> tuple:
         data = self.cursor.execute("""
             SELECT 
             AVG(p2) AS avg_p2
@@ -144,17 +144,17 @@ if __name__ == "__main__":
         min_p2  = db.get_min_dustp2(date)
 
 
-        print(f"Durchschnittstemperatur: {avg_temp}")
-        print(f"Maximale Temperatur: {max_temp}")
-        print(f"Minimale Temperatur: {min_temp}")
+        print(f"Durchschnittstemperatur: {avg_temp[0]} C°")
+        print(f"Maximale Temperatur: {max_temp[0]} C°")
+        print(f"Minimale Temperatur: {min_temp[0]} C°")
 
-        print(f"Durchschnitliche Luftfeuchtigkeit in Prozent: {avg_hum} ")
-        print(f"Maximale Luftfeuchtigkeit in Prozent: {max_hum} ")
-        print(f"Minimale Luftfeuchtigkeit in Prozent: {min_hum} ")
+        print(f"Durchschnitliche Luftfeuchtigkeit in Prozent: {avg_hum[0]} %")
+        print(f"Maximale Luftfeuchtigkeit in Prozent: {max_hum[0]} %")
+        print(f"Minimale Luftfeuchtigkeit in Prozent: {min_hum[0]} %")
 
-        print(f"Durchschnitliche Feinstaubwerte P1: {avg_p1} P2: {avg_p2}")
-        print(f"Maximale Feinstaubwerte P1: {max_p1} P2: {max_p2}")
-        print(f"Minimale Feinstaubwerte P1: {min_p1} P2: {min_p2}")
+        print(f"Durchschnitliche Feinstaubwerte P1: {avg_p1[0]} mg/m³ P2: {avg_p2[0]} mg/m³")
+        print(f"Maximale Feinstaubwerte P1: {max_p1[0]} mg/m³ P2: {max_p2[0]} mg/m³")
+        print(f"Minimale Feinstaubwerte P1: {min_p1[0]} mg/m³ P2: {min_p2[0]} mg/m³")
 
     except ValueError:
         print("Fehlerhafte Eingabe: Bitte überprüfe das Datumsformat.")

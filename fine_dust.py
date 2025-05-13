@@ -24,7 +24,7 @@ class PlotGraph:
             print(f"Fehler beim Zugriff auf die Datenbank: {e}")
             return []
 
-    def create_graphic(self, datum: str):
+    def create_graphic(self, datum: str) -> None:
         try:
             datetime.strptime(datum, "%Y-%m-%d")
         except ValueError:
