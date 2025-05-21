@@ -14,15 +14,16 @@ class Menu:
                 "❌ Beenden"
             ]
         ).ask()
+        print("\n")
 
     def handle_selection(self) -> None:
         match self.selected:
-            case "📂 Daten anzeigen":
+            case "📂 Daten herunterladen":
+                
                 print("Daten anzeigen")
-                # Hier kannst du den Code zum Anzeigen der Daten einfügen
-            case "🧮 Analyse starten":
+            case "Datenbank erstellen":
+                
                 print("Analyse starten")
-                # Hier kannst du den Code zur Analyse einfügen
             case "❌ Beenden":
                 print("Beenden")
                 self.running = False
