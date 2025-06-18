@@ -1,0 +1,11 @@
+<!ELEMENT sensor_id (#PCDATA) >
+<!ELEMENT latitude (#PCDATA) >
+<!ELEMENT longitude (#PCDATA) >
+<!ELEMENT time (#PCDATA) >
+<!ELEMENT hum (#PCDATA) >
+<!ELEMENT temp (#PCDATA) >
+<!ELEMENT p1_data (#PCDATA) >
+<!ELEMENT p2_data (#PCDATA) >
+<!ELEMENT sensor (sensor_id, (latitude, longitude) ) >
+<!ELEMENT dht (time, (hum, temp)) >
+<!ELEMENT sds (time, (p1_data ,p2_data)) >
