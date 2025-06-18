@@ -1,0 +1,11 @@
+<!ELEMENT sensor_id (#PCDATA)>
+<!ELEMENT lat (#PCDATA)>
+<!ELEMENT lon (#PCDATA)>
+<!ELEMENT timestamp (#PCDATA)>
+<!ELEMENT hum (#PCDATA)>
+<!ELEMENT temp (#PCDATA)>
+<!ELEMENT p1 (#PCDATA)>
+<!ELEMENT p2 (#PCDATA)>
+<!ELEMENT sensor (sensor_id, (lat, lon)>
+<!ELEMENT DHT (timestamp(hum, temp))>
+<!ELEMENT sds (timestamp(p1, p2))>
