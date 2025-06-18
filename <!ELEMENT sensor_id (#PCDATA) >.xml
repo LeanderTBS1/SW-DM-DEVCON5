@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE test SYSTEM "DTD.dtd">
-<test>
+<!DOCTYPE doc SYSTEM "DTD.dtd">
+<doc>
     <sensor>
         <sensor_id>12345</sensor_id>
         <latitude>48.1351</latitude>
@@ -16,4 +16,4 @@
         <p1_data>12.3</p1_data>
         <p2_data>9.4</p2_data>
     </sds>
-</test>
+</doc>

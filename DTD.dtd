@@ -1,3 +1,4 @@
+<!ELEMENT doc (sensor,dht, sds) >
 <!ELEMENT sensor_id (#PCDATA) >
 <!ELEMENT latitude (#PCDATA) >
 <!ELEMENT longitude (#PCDATA) >
